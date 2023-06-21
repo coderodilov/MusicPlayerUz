@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Music Player</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="ask_permission">Music Player needs storage access so you can load and listen music</string>
+    <string name="give_permission">Give Permission</string>
+    <string name="permission_and_turn_files_and_media_on1"><![CDATA[-> Tap Give Permission]]></string>
+    <string name="permission_and_turn_files_and_media_on"><![CDATA[-> Permission, and turn Files and media on]]></string>
+    <string name="close_app">Close App</string>
+    <string name="playing_now">Playing Now</string>
+    <string name="_05_00">05:00</string>
+</resources>

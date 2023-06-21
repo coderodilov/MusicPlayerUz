@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/main_color"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.MusicFragment">
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/searchView"
+                android:layout_width="250dp"
+                android:layout_height="match_parent"
+                android:textAppearance="@style/ThemeOverlay.AppCompat.SearchView"
+                android:theme="@style/ThemeOverlay.AppCompat.SearchView"
+                android:visibility="gone"
+                app:closeIcon="@null"
+                app:iconifiedByDefault="false"
+                app:queryBackground="@android:color/transparent"
+                app:queryHint="Search here.."
+                app:searchHintIcon="@drawable/ic_search"
+                app:searchIcon="@drawable/ic_search"
+                tools:ignore="SpUsage" />
+
+            <ImageButton
+                android:id="@+id/btnBack"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:padding="5dp"
+                android:layout_centerVertical="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:importantForAccessibility="no"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_back"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/gilroy_regular"
+                android:text="@string/playing_now"
+                android:textColor="@color/white"
+                android:textSize="18dp"
+                tools:ignore="SpUsage,TextSizeCheck" />
+
+        </RelativeLayout>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginTop="24dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvSongName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="32dp"
+            android:ellipsize="marquee"
+            android:fontFamily="@font/gilroy_regular"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="Beleiver New 2023"
+            android:textColor="@color/white"
+            android:textSize="24dp"
+            tools:ignore="HardcodedText,SpUsage,TextSizeCheck" />
+
+        <TextView
+            android:id="@+id/tvCurrentSongPosition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/gilroy_ultralight"
+            android:text="15/95"
+            android:textColor="#8996B8"
+            android:textSize="18dp"
+            tools:ignore="HardcodedText,RelativeOverlap,SpUsage,TextSizeCheck" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+
+        <me.tankery.lib.circularseekbar.CircularSeekBar
+            android:id="@+id/musicCircleSeekbar"
+            android:layout_width="280dp"
+            android:layout_height="280dp"
+            android:layout_gravity="center"
+            app:cs_circle_color="#3F5562"
+            app:cs_circle_progress_color="#79D544"
+            app:cs_circle_stroke_width="6dp"
+            app:cs_circle_style="round"
+            app:cs_circle_x_radius="0dp"
+            app:cs_circle_y_radius="0dp"
+            app:cs_disable_pointer="false"
+            app:cs_lock_enabled="true"
+            app:cs_maintain_equal_circle="true"
+            app:cs_max="100"
+            app:cs_move_outside_circle="true"
+            app:cs_negative_enabled="false"
+            app:cs_pointer_alpha_ontouch="5"
+            app:cs_pointer_color="#79D544"
+            app:cs_pointer_stroke_width="15dp"
+            app:cs_progress="70"
+            app:cs_use_custom_radii="false" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageSongCover"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:elevation="5dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/song_logo"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="2dp"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_margin="16dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_height="70dp">
+
+            <TextView
+                android:id="@+id/tvCurrentDuration"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/gilroy_ultralight"
+                android:gravity="center"
+                android:text="00:48"
+                android:textColor="#8996B8"
+                android:textSize="18dp"
+                tools:ignore="HardcodedText,RelativeOverlap,SpUsage,TextSizeCheck" />
+
+            <ImageButton
+                android:id="@+id/btnShuffle"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:importantForAccessibility="no"
+                android:padding="3dp"
+                android:elevation="3dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_shuffle"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <ImageButton
+                android:id="@+id/btnLike"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginHorizontal="16dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:importantForAccessibility="no"
+                android:padding="5dp"
+                android:elevation="3dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_heart"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <ImageButton
+                android:id="@+id/btnRepeat"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:importantForAccessibility="no"
+                android:padding="3dp"
+                android:elevation="3dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_repeat"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <TextView
+                android:id="@+id/tvLessDuration"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/gilroy_ultralight"
+                android:gravity="center"
+                android:text="-04:32"
+                android:textColor="#8996B8"
+                android:textSize="18dp"
+                tools:ignore="HardcodedText,RelativeOverlap,SpUsage,TextSizeCheck" />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp">
+
+            <ImageButton
+                android:id="@+id/btnVolumeManager"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:elevation="3dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="16dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_volume"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <SeekBar
+                android:id="@+id/seekBarVolume"
+                android:layout_width="250dp"
+                android:elevation="3dp"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" />
+
+            <TextView
+                android:id="@+id/tvVolumeInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp"
+                android:elevation="3dp"
+                android:fontFamily="@font/gilroy_ultralight"
+                android:text="50%"
+                android:textColor="#8996B8"
+                android:textSize="18dp"
+                tools:ignore="HardcodedText,RelativeOverlap,SpUsage,TextSizeCheck" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/musicControllers"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:elevation="3dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            tools:ignore="NestedWeights">
+
+
+            <ImageButton
+                android:id="@+id/btnPrevious"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:elevation="3dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_prev"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <ImageButton
+                android:id="@+id/btnPlayPause"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginHorizontal="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:importantForAccessibility="no"
+                android:padding="2dp"
+                android:src="@drawable/ic_pause"
+                tools:ignore="TouchTargetSizeCheck" />
+
+            <ImageButton
+                android:id="@+id/btnNext"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:elevation="3dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:importantForAccessibility="no"
+                android:padding="2dp"
+                android:src="@drawable/ic_next"
+                tools:ignore="TouchTargetSizeCheck" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

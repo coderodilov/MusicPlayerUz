@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   android:id="@+id/musicItemContainer"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:layout_marginHorizontal="18dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="12dp"
+    android:layout_marginVertical="6dp"
+    android:foreground="?attr/selectableItemBackground"
+    android:background="@android:color/transparent"
+    app:cardUseCompatPadding="true">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/imageSong"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="8dp"
+        app:riv_corner_radius="8dip"
+        android:layout_centerVertical="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/song_logo"/>
+
+    <ImageButton
+        android:id="@+id/btnPlay"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="6dp"
+        android:src="@drawable/ic_play"
+        android:importantForAccessibility="no" />
+
+
+    <TextView
+        android:id="@+id/tvSongName"
+        android:layout_width="220dp"
+        android:text="Music Name"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:textSize="16dp"
+        android:fontFamily="@font/gilroy_medium"
+        android:layout_toEndOf="@+id/imageSong"
+        android:textColor="@color/white"
+        android:layout_alignTop="@+id/imageSong"
+        android:layout_marginStart="12dp"
+        android:textStyle="bold"
+        android:layout_height="wrap_content"
+        tools:ignore="SpUsage" />
+
+    <TextView
+        android:id="@+id/tvSongDate"
+        android:layout_width="wrap_content"
+        android:text="20 may 3 PM"
+        android:layout_below="@+id/tvSongName"
+        android:textSize="14dp"
+        android:fontFamily="@font/gilroy_regular"
+        android:layout_toEndOf="@+id/imageSong"
+        android:textColor="@color/white"
+        android:layout_marginStart="12dp"
+        android:layout_height="wrap_content"
+        tools:ignore="SpUsage" />
+    
+    
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:scaleType="centerCrop"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/divider_line"
+        android:importantForAccessibility="no" />
+
+</RelativeLayout>

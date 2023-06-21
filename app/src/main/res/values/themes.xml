@@ -1,0 +1,20 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.MusicPlayerUz" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="colorPrimary">@color/main_color</item>
+        <item name="android:statusBarColor">@color/main_color</item>
+    </style>
+
+    <style name="Theme.MusicPlayerUz" parent="Base.Theme.MusicPlayerUz" />
+    <style name="ThemeOverlay.AppCompat.SearchView">
+        <item name="android:textColorHint">@color/white</item>
+        <item name="android:editTextColor">@color/white</item>
+        <item name="android:textSize" tools:ignore="SpUsage">18dp</item>
+    </style>
+
+    <style name="ToolbarStyle" parent="Widget.AppCompat.Toolbar">
+        <item name="android:fontFamily">@font/gilroy_medium</item>
+    </style>
+
+</resources>
