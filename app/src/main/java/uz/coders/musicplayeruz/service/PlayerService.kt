@@ -27,20 +27,12 @@ class PlayerService : Service() {
 
     private lateinit var mediaPlayer: MediaPlayer
     private lateinit var musicList: ArrayList<Music>
-    private lateinit var mediaSession: MediaSessionCompat
-
     private var currentSongPosition = 0
 
-    private val binder = MediaPlayerBinder()
+    private lateinit var mediaSession: MediaSessionCompat
 
-    inner class MediaPlayerBinder : Binder() {
-        fun getService(): PlayerService {
-            return this@PlayerService
-        }
-    }
-
-    override fun onBind(intent: Intent?): IBinder {
-        return binder
+    override fun onBind(intent: Intent?): IBinder? {
+        return null
     }
 
     override fun onCreate() {
@@ -49,6 +41,7 @@ class PlayerService : Service() {
         mediaPlayer = MediaPlayer()
         mediaPlayer.isLooping = false
         musicList = MusicReaderHelper().getAllMusic(this)
+
         mediaSession = MediaSessionCompat(this, "MyMediaSession")
 
         startForeground(1, createNotification())
@@ -80,7 +73,7 @@ class PlayerService : Service() {
 
         val largeIcon = BitmapFactory.decodeResource(this.resources, R.drawable.song_logo)
 
-        val notification = NotificationCompat.Builder(this, AppClass.CHANNEL_2_ID)
+        val notification = NotificationCompat.Builder(this, AppClass.CHANNEL_1_ID)
             .setContentTitle(musicList[currentSongPosition].songName)
             .setContentText(musicList[currentSongPosition].artist)
             .setSmallIcon(R.drawable.song_logo)

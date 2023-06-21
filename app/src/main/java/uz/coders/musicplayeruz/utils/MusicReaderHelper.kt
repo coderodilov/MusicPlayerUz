@@ -57,7 +57,6 @@ class MusicReaderHelper {
         return musicList
     }
 
-
     fun loadAlbumArt(context: Context, musicUri: Uri, imageView: ImageView) {
         val projection = arrayOf(MediaStore.Audio.Media.ALBUM_ID)
         val selection = "${MediaStore.Audio.Media.DATA} = ?"

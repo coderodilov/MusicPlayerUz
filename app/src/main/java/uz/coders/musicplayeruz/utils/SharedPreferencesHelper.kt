@@ -26,4 +26,12 @@ class SharedPreferencesHelper(private val context: Context) {
         return sharedPreferences.getString(key, defaultValue) ?: defaultValue
     }
 
+    fun saveBoolean(key: String, value: Boolean) {
+        sharedPreferences.edit().putBoolean(key, value).apply()
+    }
+
+    fun getBoolean(key: String, defaultValue: Boolean): Boolean {
+        return sharedPreferences.getBoolean(key, defaultValue)
+    }
+
 }

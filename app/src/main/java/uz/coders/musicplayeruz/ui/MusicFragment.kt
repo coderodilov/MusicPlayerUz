@@ -1,27 +1,26 @@
 package uz.coders.musicplayeruz.ui
 
 
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
-import android.os.IBinder
+import android.util.Log
 import android.view.View
 import android.widget.SeekBar
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import me.tankery.lib.circularseekbar.CircularSeekBar
 import uz.coders.musicplayeruz.R
+import uz.coders.musicplayeruz.app.AppClass
 import uz.coders.musicplayeruz.databinding.FragmentMusicBinding
 import uz.coders.musicplayeruz.model.Music
 import uz.coders.musicplayeruz.service.PlayerService
 import uz.coders.musicplayeruz.utils.MusicReaderHelper
 import uz.coders.musicplayeruz.utils.SharedPreferencesHelper
-
+import java.io.IOException
 
 class MusicFragment : Fragment(R.layout.fragment_music) {
     private var _binding: FragmentMusicBinding? = null
@@ -30,28 +29,15 @@ class MusicFragment : Fragment(R.layout.fragment_music) {
     private val args by navArgs<MusicFragmentArgs>()
     private lateinit var musicList: ArrayList<Music>
 
+    private var currentSongId = 0
+    private var musicSeekBarMax = 0f
+    private val song = AppClass.song
+    private var musicSeekbarCurrentPosition = 0
+    private var isLooping = false
+
     private lateinit var audioManager: AudioManager
     private lateinit var sharedPreferencesHelper: SharedPreferencesHelper
 
-    private var mediaPlayerService: PlayerService? = null
-    private var isBound: Boolean = false
-    private lateinit var viewModel: MusicPlayerViewModel
-
-    private lateinit var mediaPlayer:MediaPlayer
-    private var currentSongId = 0
-
-    private val connection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            val binder = service as PlayerService.MediaPlayerBinder
-            mediaPlayerService = binder.getService()
-            isBound = true
-        }
-
-        override fun onServiceDisconnected(name: ComponentName?) {
-            mediaPlayerService = null
-            isBound = false
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -59,28 +45,149 @@ class MusicFragment : Fragment(R.layout.fragment_music) {
 
         musicList = MusicReaderHelper().getAllMusic(requireContext())
         audioManager = requireActivity().getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        binding.seekBarVolume.max = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
 
-        viewModel = ViewModelProvider(this)[MusicPlayerViewModel::class.java]
         sharedPreferencesHelper = SharedPreferencesHelper(requireContext())
-        currentSongId = args.id
+        isLooping = sharedPreferencesHelper.getBoolean("isLooping", false)
 
         startMusicPlayer()
         seekBarChangeHandler()
-        loadButtonClicks()
+        setMusicControllerButtonClicks()
 
     }
 
-    private fun startMusicPlayer() {}
+    private fun startMusicPlayer() {
+        currentSongId = args.id
+        musicSeekBarMax = musicList[currentSongId].duration.toFloat()
+        binding.musicCircleSeekbar.max = musicSeekBarMax
 
-    private fun loadButtonClicks() {
-        with(binding){
-            btnPlayPause.setOnClickListener {}
+        updateSong(currentSongId)
+        updateUI(currentSongId)
+        requireActivity().startService(Intent(requireContext(), PlayerService::class.java))
 
-            btnPrevious.setOnClickListener {}
+    }
 
-            btnNext.setOnClickListener {}
+    private fun setMusicControllerButtonClicks() {
+        with(binding) {
+            btnPlayPause.setOnClickListener { playPauseSong(song) }
+
+            btnPrevious.setOnClickListener { previousSong() }
+
+            btnNext.setOnClickListener { nextSong() }
+
+            btnRepeat.setOnClickListener {
+                if (isLooping.not()){
+                    isLooping = true
+                    sharedPreferencesHelper.saveBoolean("isLooping", true)
+                    song.isLooping = true
+                    binding.btnRepeat.setImageResource(R.drawable.ic_repeat_active)
+                } else {
+                    isLooping = false
+                    sharedPreferencesHelper.saveBoolean("isLooping", false)
+                    song.isLooping = false
+                    binding.btnRepeat.setImageResource(R.drawable.ic_repeat)
+                }
+            }
 
         }
+    }
+
+
+    private fun playPauseSong(song: MediaPlayer) {
+        if (song.isPlaying) {
+            song.pause()
+            binding.btnPlayPause.setImageResource(R.drawable.ic_play)
+        } else {
+            song.start()
+            binding.btnPlayPause.setImageResource(R.drawable.ic_pause)
+            updateProgress()
+        }
+
+    }
+
+    private fun previousSong() {
+        if (currentSongId != 0) currentSongId--
+        else currentSongId = musicList.lastIndex
+
+        updateSong(currentSongId)
+        updateUI(currentSongId)
+    }
+
+    private fun nextSong() {
+        if (currentSongId != musicList.lastIndex) currentSongId++
+        else currentSongId = 0
+
+        updateSong(currentSongId)
+        updateUI(currentSongId)
+    }
+
+    private fun updateSong(currentSongId: Int) {
+        song.stop()
+        song.reset()
+        song.isLooping = isLooping
+        try {
+            song.setDataSource(musicList[currentSongId].filePath)
+            song.prepare()
+            song.start()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun updateUI(currentSongId: Int) {
+        with(binding) {
+            MusicReaderHelper().loadAlbumArt(
+                requireContext(),
+                Uri.parse(musicList[currentSongId].filePath),
+                imageSongCover
+            )
+            tvSongName.text = musicList[currentSongId].songName
+            tvCurrentSongPosition.text =
+                (currentSongId.plus(1)).toString().plus("/").plus(musicList.size)
+
+            musicCircleSeekbar.max = musicList[currentSongId].duration.toFloat()
+
+            if (song.isPlaying) btnPlayPause.setImageResource(R.drawable.ic_pause)
+            else btnPlayPause.setImageResource(R.drawable.ic_play)
+
+            if (isLooping) btnRepeat.setImageResource(R.drawable.ic_repeat_active)
+            else btnRepeat.setImageResource(R.drawable.ic_repeat)
+
+            updateProgress()
+
+            val currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+            seekBarVolume.progress = currentVolume
+            tvVolumeInfo.text = currentVolume.toString()
+        }
+    }
+
+    private fun updateProgress() {
+        val thread = Thread {
+            Thread.sleep(50)
+            try {
+                while (song.isPlaying) {
+                    Thread.sleep(950)
+                    try {
+                        requireActivity().runOnUiThread {
+                            musicSeekbarCurrentPosition = song.currentPosition
+                            musicSeekBarMax = song.duration.toFloat() - musicSeekbarCurrentPosition
+
+                            binding.tvCurrentDuration.text = timeFormatter(musicSeekbarCurrentPosition)
+                            binding.tvLessDuration.text = timeFormatter(musicSeekBarMax.toInt())
+                            binding.musicCircleSeekbar.progress = musicSeekbarCurrentPosition.toFloat()
+
+                            if (!isLooping && binding.tvLessDuration.text.equals("00:00")) nextSong()
+
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        thread.start()
     }
 
     private fun seekBarChangeHandler() {
@@ -89,7 +196,13 @@ class MusicFragment : Fragment(R.layout.fragment_music) {
             override fun onProgressChanged(
                 circularSeekBar: CircularSeekBar?,
                 progress: Float,
-                fromUser: Boolean) {}
+                fromUser: Boolean
+            ) {
+                if (fromUser){
+                    binding.musicCircleSeekbar.progress = progress
+                    song.seekTo(progress.toInt())
+                }
+            }
 
             override fun onStartTrackingTouch(seekBar: CircularSeekBar?) {}
             override fun onStopTrackingTouch(seekBar: CircularSeekBar?) {}
@@ -112,7 +225,6 @@ class MusicFragment : Fragment(R.layout.fragment_music) {
         })
     }
 
-
     private fun timeFormatter(time: Int): String {
         val timeFormatResult = StringBuilder()
         val min = time / 1000 / 60
@@ -133,17 +245,9 @@ class MusicFragment : Fragment(R.layout.fragment_music) {
         return timeFormatResult.toString()
     }
 
-
-    override fun onStart() {
-        super.onStart()
-        val serviceIntent = Intent(requireContext(), PlayerService::class.java)
-        requireContext().bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE)
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
 
 }
